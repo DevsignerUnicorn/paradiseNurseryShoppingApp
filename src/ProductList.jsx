@@ -315,26 +315,27 @@ function ProductList({ onHomeClick }) {
                 <div className="product-grid">
                     {plantsArray.map((categoryObj, index) => (
                         <div key={index}>
-                            <h2>{categoryObj.category}</h2>
-                            <div className="plant-category">
-                                {categoryObj.plants.map((plant, idx) => (
-                                   <div key={idx} className="plant-card">
-                                     <img src={plantsArray.image} alt={plantsArray.name} width="200" />
-                                     <h3>{plant.name}</h3>
-                                     <p>{plant.description}</p>
-                                     <p><strong>{plant.cost}</strong></p>
-                                     <button 
-                                     onClick={() => handleAddToCart(plant)} 
-                                     disabled={addedToCart[plant.name]} 
-                                     > 
-                                     {addedToCart[plant.name] ? 'Added to Cart' : 'Add to Cart'}
-                                     </button>
-                                   </div> 
-                                ))}
-                            </div>
+                            <h2 className="plant_heading">{categoryObj.category}</h2>
+                        <div className="product-list">
+                      {categoryObj.plants.map((plant, idx) => (
+                        <div key={idx} className="product-card">
+                          <img className="product-image" src={plant.image} alt={plant.name} />
+                          <h3 className="product-title">{plant.name}</h3>
+                          <p>{plant.description}</p>
+                          <p className="product-price">{plant.cost}</p>
+                          <button 
+                            className={`product-button ${addedToCart[plant.name] ? 'added-to-cart' : ''}`}
+                            onClick={() => handleAddToCart(plant)}
+                            disabled={addedToCart[plant.name]}
+                          >
+                            {addedToCart[plant.name] ? 'Added' : 'Add to Cart'}
+                          </button>
                         </div>
-                    ))}
-                </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
                 <CartItem onContinueShopping={handleContinueShopping} />
             )}
