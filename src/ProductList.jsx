@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+import { useDispatch } from 'react-redux';
+import { addItem } from './CartSlice';
+
 function ProductList({ onHomeClick }) {
+    const dispatch = useDispatch();
+    const [addedToCart, setAddedToCart] = useState({});
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
 
@@ -248,6 +253,14 @@ function ProductList({ onHomeClick }) {
         setShowCart(false); // Hide the cart when navigating to About Us
     };
 
+    const handleAddToCart = (plant) => {
+        dispatch(addItem(plant)); // Sends plant data to Redux
+        setAddedToCart(prev => ({
+            ...prev,
+            [plant.name]: true // Mark this plant as added
+        }));
+    };
+
     const handleContinueShopping = (e) => {
         e.preventDefault();
         setShowCart(false);
@@ -274,8 +287,27 @@ function ProductList({ onHomeClick }) {
             </div>
             {!showCart ? (
                 <div className="product-grid">
-
-
+                    {plantsArray.map((categoryObj, index) => (
+                        <div key={index}>
+                            <h2>{categoryObj.category}</h2>
+                            <div className="plant-category">
+                                {categoryObj.plants.map((plant, idx) => (
+                                   <div key={idx} className="plant-card">
+                                     <img src={plantsArray.image} alt={plantsArray.name} width="200" />
+                                     <h3>{plant.name}</h3>
+                                     <p>{plant.description}</p>
+                                     <p><strong>{plant.cost}</strong></p>
+                                     <button 
+                                     onClick={() => handleAddToCart(plant)} 
+                                     disabled={addedToCart[plant.name]} 
+                                     > 
+                                     {addedToCart[plant.name] ? 'Added to Cart' : 'Add to Cart'}
+                                     </button>
+                                   </div> 
+                                ))}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             ) : (
                 <CartItem onContinueShopping={handleContinueShopping} />
